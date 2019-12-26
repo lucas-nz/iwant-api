@@ -16,9 +16,22 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <framework.version>0.0.10-SNAPSHOT</framework.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.dw.health</groupId>
+            <artifactId>framework-core</artifactId>
+            <version>${framework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
