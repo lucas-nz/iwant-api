@@ -13,21 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-  /**
-   * 用户未登录
-   *
-   * @param e
-   * @author zhousz
-   * @date 2019/12/26  13:34
-   * @return com.noobz.iwant.core.result.Result
-   * @throws
-   */
-  @ResponseBody
-  @ExceptionHandler(NotPassAuthenticationException.class)
-  public Result notPassAuthenExceptionHandler(NotPassAuthenticationException e) {
-    return Result.error(ResultCode.USER_NOT_LOGGED_IN);
-  }
-
   @ResponseBody
   @ExceptionHandler(BizException.class)
   public Result bizExceptionHandler(BizException e) {

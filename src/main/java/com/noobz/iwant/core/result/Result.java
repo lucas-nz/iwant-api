@@ -75,4 +75,7 @@ public class Result<T> {
     this.errorMsg = code.getMsg();
   }
 
+  public void setErrorMsg(String msg) {
+    this.errorMsg = msg;
+  }
 }

@@ -1,6 +1,7 @@
 package com.noobz.iwant.mapper;
 
 import com.noobz.iwant.entity.User;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -16,8 +17,11 @@ public interface UserMapper {
   @Select("select id, username, password from user where username = #{username}")
   User getUserByUsername(@Param("username") String username);
 
-
   User getUserById(@Param("id") String id);
+
+  @Insert("insert into user (username, password)values(#{username}, #{password})")
+  int saveUser(@Param("username") String username, @Param("password") String password);
+
 
 
 }

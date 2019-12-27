@@ -3,7 +3,6 @@ package com.noobz.iwant.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.noobz.iwant.entity.User;
-import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
 
 /**
