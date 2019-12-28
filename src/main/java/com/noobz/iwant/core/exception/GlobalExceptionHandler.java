@@ -16,12 +16,14 @@ public class GlobalExceptionHandler {
   @ResponseBody
   @ExceptionHandler(BizException.class)
   public Result bizExceptionHandler(BizException e) {
+    e.printStackTrace();
     return Result.error(e.getMessage());
   }
 
   @ResponseBody
   @ExceptionHandler(Exception.class)
   public Result systemErrorHandler(Exception e) {
+    e.printStackTrace();
     return Result.error(ResultCode.SYSTEM_INNER_ERROR);
   }
 

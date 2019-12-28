@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.noobz.iwant.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.noobz.iwant.entity.User" >
+    <constructor >
+      <idArg column="account_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <idArg column="idno" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="realname" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="volunteer_no" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="city" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="work_place" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="job" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="job_level" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="education" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="special" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="mobile" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="address" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.noobz.iwant.entity.UserWithBLOBs" >
+    <constructor >
+      <idArg column="account_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <idArg column="idno" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="realname" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="volunteer_no" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="city" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="work_place" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="job" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="job_level" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="education" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="special" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="mobile" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="address" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="skill" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+      <arg column="improve" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    account_id, idno, realname, volunteer_no, city, work_place, job, job_level, education, 
+    special, email, mobile, address
+  </sql>
+  <sql id="Blob_Column_List" >
+    skill, improve
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.noobz.iwant.entity.UserKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from user
+    where account_id = #{accountId,jdbcType=VARCHAR}
+      and idno = #{idno,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.noobz.iwant.entity.UserKey" >
+    delete from user
+    where account_id = #{accountId,jdbcType=VARCHAR}
+      and idno = #{idno,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.noobz.iwant.entity.UserWithBLOBs" >
+    insert into user (account_id, idno, realname, 
+      volunteer_no, city, work_place, 
+      job, job_level, education, 
+      special, email, mobile, 
+      address, skill, improve
+      )
+    values (#{accountId,jdbcType=VARCHAR}, #{idno,jdbcType=VARCHAR}, #{realname,jdbcType=VARCHAR}, 
+      #{volunteerNo,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{workPlace,jdbcType=VARCHAR}, 
+      #{job,jdbcType=VARCHAR}, #{jobLevel,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, 
+      #{special,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{skill,jdbcType=LONGVARCHAR}, #{improve,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.noobz.iwant.entity.UserWithBLOBs" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="idno != null" >
+        idno,
+      </if>
+      <if test="realname != null" >
+        realname,
+      </if>
+      <if test="volunteerNo != null" >
+        volunteer_no,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="workPlace != null" >
+        work_place,
+      </if>
+      <if test="job != null" >
+        job,
+      </if>
+      <if test="jobLevel != null" >
+        job_level,
+      </if>
+      <if test="education != null" >
+        education,
+      </if>
+      <if test="special != null" >
+        special,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="skill != null" >
+        skill,
+      </if>
+      <if test="improve != null" >
+        improve,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="accountId != null" >
+        #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="idno != null" >
+        #{idno,jdbcType=VARCHAR},
+      </if>
+      <if test="realname != null" >
+        #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="volunteerNo != null" >
+        #{volunteerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="workPlace != null" >
+        #{workPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null" >
+        #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="jobLevel != null" >
+        #{jobLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="education != null" >
+        #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="special != null" >
+        #{special,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="skill != null" >
+        #{skill,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="improve != null" >
+        #{improve,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.noobz.iwant.entity.UserWithBLOBs" >
+    update user
+    <set >
+      <if test="realname != null" >
+        realname = #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="volunteerNo != null" >
+        volunteer_no = #{volunteerNo,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="workPlace != null" >
+        work_place = #{workPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null" >
+        job = #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="jobLevel != null" >
+        job_level = #{jobLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="education != null" >
+        education = #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="special != null" >
+        special = #{special,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="skill != null" >
+        skill = #{skill,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="improve != null" >
+        improve = #{improve,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where account_id = #{accountId,jdbcType=VARCHAR}
+      and idno = #{idno,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.noobz.iwant.entity.UserWithBLOBs" >
+    update user
+    set realname = #{realname,jdbcType=VARCHAR},
+      volunteer_no = #{volunteerNo,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      work_place = #{workPlace,jdbcType=VARCHAR},
+      job = #{job,jdbcType=VARCHAR},
+      job_level = #{jobLevel,jdbcType=VARCHAR},
+      education = #{education,jdbcType=VARCHAR},
+      special = #{special,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      skill = #{skill,jdbcType=LONGVARCHAR},
+      improve = #{improve,jdbcType=LONGVARCHAR}
+    where account_id = #{accountId,jdbcType=VARCHAR}
+      and idno = #{idno,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.noobz.iwant.entity.User" >
+    update user
+    set realname = #{realname,jdbcType=VARCHAR},
+      volunteer_no = #{volunteerNo,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      work_place = #{workPlace,jdbcType=VARCHAR},
+      job = #{job,jdbcType=VARCHAR},
+      job_level = #{jobLevel,jdbcType=VARCHAR},
+      education = #{education,jdbcType=VARCHAR},
+      special = #{special,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR}
+    where account_id = #{accountId,jdbcType=VARCHAR}
+      and idno = #{idno,jdbcType=VARCHAR}
+  </update>
+</mapper>

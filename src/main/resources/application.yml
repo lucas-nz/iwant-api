@@ -7,4 +7,4 @@ server:
 
 mybatis:
   config-location: classpath:mybatis.xml
-  mapper-locations: classpath:/*Mapper.xml
+  mapper-locations: classpath:mapping/*Mapper.xml

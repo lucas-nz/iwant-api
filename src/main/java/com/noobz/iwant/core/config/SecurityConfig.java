@@ -2,23 +2,20 @@ package com.noobz.iwant.core.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.noobz.iwant.core.result.Result;
-import com.noobz.iwant.entity.User;
-import com.noobz.iwant.service.UserService;
+import com.noobz.iwant.entity.Account;
+import com.noobz.iwant.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
-import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -37,7 +34,7 @@ import java.io.PrintWriter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
-  private UserService userService;
+  private AccountService userService;
 
   @Bean
   PasswordEncoder passwordEncoder() {
@@ -55,14 +52,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http
       .authorizeRequests()
-      .antMatchers("/","/api/register","/login","/401","/css/**","/js/**")
+      .antMatchers("/","/register","/login","/401","/css/**","/js/**")
       .permitAll()
       .anyRequest()
       .authenticated()
       .and()
       .formLogin()
-      .loginProcessingUrl("/api/login")
-      .loginPage("/login")
+      .loginProcessingUrl("/login")
+      .loginPage("/login_page")
       .usernameParameter("username")
       .passwordParameter("password")
       .successHandler(new AuthenticationSuccessHandler() {
@@ -72,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                             Authentication authentication) throws IOException, ServletException {
           resp.setContentType("application/json;charset=utf-8");
           PrintWriter writer = resp.getWriter();
-          User user = (User) authentication.getPrincipal();
+          Account user = (Account) authentication.getPrincipal();
           user.setPassword(null);
           Result result = Result.success(user);
           String s = new ObjectMapper().writeValueAsString(result);
@@ -106,6 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .permitAll()
       .and()
       .logout()
+      .logoutUrl("/logout")
       .logoutSuccessHandler(new LogoutSuccessHandler() {
         @Override
         public void onLogoutSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws IOException, ServletException {
@@ -124,10 +122,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         @Override
         public void commence(HttpServletRequest req, HttpServletResponse resp, AuthenticationException authException) throws IOException, ServletException {
           resp.setContentType("application/json;charset=utf-8");
+          resp.setStatus(401);
           PrintWriter out = resp.getWriter();
           Result error = Result.error("访问失败!");
           if (authException instanceof InsufficientAuthenticationException) {
-            error.setErrorMsg("身份验证失败!");
+            error.setErrorMsg("身份验证失败!请重新登录");
           }
           out.write(new ObjectMapper().writeValueAsString(error));
           out.flush();
