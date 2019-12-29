@@ -8,3 +8,16 @@ server:
 mybatis:
   config-location: classpath:mybatis.xml
   mapper-locations: classpath:mapping/*Mapper.xml
+
+#jwt
+jwt:
+  header: Authorization
+  secret: mySecret
+  # token 过期时间 2个小时
+  #expiration: 7200000
+  expiration: 3600000
+  auth:
+    # 授权路径
+    path: /login
+    # 获取用户信息
+    account: /info

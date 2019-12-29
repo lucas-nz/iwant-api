@@ -1,130 +1,146 @@
 package com.noobz.iwant.entity;
 
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
 
+@ToString
 public class Account implements UserDetails {
 
-    private Integer id;
+  private Integer id;
 
-    private String username;
+  @NotNull
+  private String username;
 
-    private String password;
+  @NotNull
+  private String password;
 
-    private Integer status;
+  private Integer status;
 
-    private Integer level;
+  private Integer level;
 
-    private Date createTime;
+  private Date createTime;
 
-    private Date modifyTime;
+  private Date modifyTime;
 
-    private byte[] avatar;
+  private Date lastPasswordResetDate;
 
-    public Account(Integer id, String username, String password, Integer status, Integer level, Date createTime, Date modifyTime, byte[] avatar) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.status = status;
-        this.level = level;
-        this.createTime = createTime;
-        this.modifyTime = modifyTime;
-        this.avatar = avatar;
-    }
+  private byte[] avatar;
 
-    public Account() {
-        super();
-    }
+  public void setAvatar(byte[] avatar) {
+    this.avatar = avatar;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public byte[] getAvatar() {
+    return avatar;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public String getUsername() {
-        return username;
-    }
+  public Account(Integer id, String username, String password, Integer status, Integer level, Date createTime, Date modifyTime, byte[] avatar) {
+    this.id = id;
+    this.username = username;
+    this.password = password;
+    this.status = status;
+    this.level = level;
+    this.createTime = createTime;
+    this.modifyTime = modifyTime;
+    this.avatar = avatar;
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+  public Account() {
+    super();
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public void setUsername(String username) {
-        this.username = username == null ? null : username.trim();
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
 
-    public void setPassword(String password) {
-        this.password = password == null ? null : password.trim();
-    }
+  @Override
+  public boolean isEnabled() {
+    return true;
+  }
 
-    public Integer getStatus() {
-        return status;
-    }
+  public void setUsername(String username) {
+    this.username = username == null ? null : username.trim();
+  }
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return null;
+  }
 
-    public Integer getLevel() {
-        return level;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
+  public void setPassword(String password) {
+    this.password = password == null ? null : password.trim();
+  }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+  public Integer getStatus() {
+    return status;
+  }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+  public void setStatus(Integer status) {
+    this.status = status;
+  }
 
-    public Date getModifyTime() {
-        return modifyTime;
-    }
+  public Integer getLevel() {
+    return level;
+  }
 
-    public void setModifyTime(Date modifyTime) {
-        this.modifyTime = modifyTime;
-    }
+  public void setLevel(Integer level) {
+    this.level = level;
+  }
 
-    public byte[] getAvatar() {
-        return avatar;
-    }
+  public Date getCreateTime() {
+    return createTime;
+  }
 
-    public void setAvatar(byte[] avatar) {
-        this.avatar = avatar;
-    }
+  public void setCreateTime(Date createTime) {
+    this.createTime = createTime;
+  }
+
+  public Date getModifyTime() {
+    return modifyTime;
+  }
+
+  public void setModifyTime(Date modifyTime) {
+    this.modifyTime = modifyTime;
+  }
+
+  public Date getLastPasswordResetDate() {
+    return lastPasswordResetDate;
+  }
+
+  public void setLastPasswordResetDate(Date lastPasswordResetDate) {
+    this.lastPasswordResetDate = lastPasswordResetDate;
+  }
 }

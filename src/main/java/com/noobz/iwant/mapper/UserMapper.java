@@ -1,21 +1,22 @@
 package com.noobz.iwant.mapper;
 
 import com.noobz.iwant.entity.User;
-import com.noobz.iwant.entity.UserKey;
-import com.noobz.iwant.entity.UserWithBLOBs;
 
 public interface UserMapper {
-    int deleteByPrimaryKey(UserKey key);
 
-    int insert(UserWithBLOBs record);
+  int insert(User record);
 
-    int insertSelective(UserWithBLOBs record);
+  int insertSelective(User record);
 
-    UserWithBLOBs selectByPrimaryKey(UserKey key);
+  int updateByPrimaryKeySelective(User record);
 
-    int updateByPrimaryKeySelective(UserWithBLOBs record);
+  int updateByPrimaryKey(User record);
 
-    int updateByPrimaryKeyWithBLOBs(UserWithBLOBs record);
+  int deleteByAccountId(Integer accountId);
 
-    int updateByPrimaryKey(User record);
+  User selectByIdno(String idno);
+
+  User selectByMobile(String mobile);
+
+  User getUserByAccountId(Integer accountId);
 }

@@ -1,6 +1,8 @@
 package com.noobz.iwant.service;
 
+import com.noobz.iwant.core.exception.BizException;
 import com.noobz.iwant.entity.Account;
+import com.noobz.iwant.entity.User;
 import com.noobz.iwant.mapper.AccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,23 +22,27 @@ public class AccountService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    Account user = accountMapper.getUserByUsername(username);
+    Account user = accountMapper.getAccountByUsername(username);
     if (null == user) {
-      throw new UsernameNotFoundException("用户不存在");
+      throw new BizException("用户不存在");
     }
     return user;
   }
 
-  public Account getUserByUsername(String username) {
-    return accountMapper.getUserByUsername(username);
-  }
-
-  public Account getUserById(String id) {
-    return accountMapper.getUserByUsername(id);
+  public Account getAccountByUsername(String username) {
+    return accountMapper.getAccountByUsername(username);
   }
 
   public int saveUser(Account user) {
     return accountMapper.insertSelective(user);
+  }
+
+  public int updateAccount(Account account) {
+    return accountMapper.updateByPrimaryKeyWithBLOBs(account);
+  }
+
+  public User getUserByAccountId(Integer accountId) {
+    return accountMapper.getUserByAccountId(accountId);
   }
 
 }

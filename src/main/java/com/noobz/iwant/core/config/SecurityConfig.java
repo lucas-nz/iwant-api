@@ -2,22 +2,22 @@ package com.noobz.iwant.core.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.noobz.iwant.core.result.Result;
-import com.noobz.iwant.entity.Account;
 import com.noobz.iwant.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.*;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import javax.servlet.ServletException;
@@ -36,74 +36,86 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private AccountService userService;
 
+  /**
+   * 自定义基于JWT的安全过滤器
+   */
+  @Autowired
+  private JwtAuthorizationTokenFilter authenticationTokenFilter;
+
+  @Autowired
+  private JwtAuthenticationEntryPoint unauthorizedHandler;
+
+  @Value("${jwt.header}")
+  private String tokenHeader;
+
   @Bean
-  PasswordEncoder passwordEncoder() {
+  PasswordEncoder passwordEncoderBean() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  GrantedAuthorityDefaults grantedAuthorityDefaults() {
+    // Remove the ROLE_ prefix
+    return new GrantedAuthorityDefaults("");
+  }
+
+  @Bean
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
   }
 
   // 定义用户和权限
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userService);
+    auth.userDetailsService(userService).passwordEncoder(passwordEncoderBean());
   }
 
   // 自定义资源认证保护
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
+
+      // 禁用 CSRF
+      .csrf().disable()
+
+      // 授权异常
+      .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+
+      // 不创建会话
+      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+
+      // 过滤请求
       .authorizeRequests()
-      .antMatchers("/","/register","/login","/401","/css/**","/js/**")
-      .permitAll()
-      .anyRequest()
-      .authenticated()
-      .and()
-      .formLogin()
-      .loginProcessingUrl("/login")
-      .loginPage("/login_page")
-      .usernameParameter("username")
-      .passwordParameter("password")
-      .successHandler(new AuthenticationSuccessHandler() {
-        @Override
-        public void onAuthenticationSuccess(HttpServletRequest req,
-                                            HttpServletResponse resp,
-                                            Authentication authentication) throws IOException, ServletException {
-          resp.setContentType("application/json;charset=utf-8");
-          PrintWriter writer = resp.getWriter();
-          Account user = (Account) authentication.getPrincipal();
-          user.setPassword(null);
-          Result result = Result.success(user);
-          String s = new ObjectMapper().writeValueAsString(result);
-          writer.write(s);
-          writer.flush();
-          writer.close();
-        }
-      })
-      .failureHandler(new AuthenticationFailureHandler() {
-        @Override
-        public void onAuthenticationFailure(HttpServletRequest req, HttpServletResponse resp, AuthenticationException exception) throws IOException, ServletException {
-          resp.setContentType("application/json;charset=utf-8");
-          PrintWriter out = resp.getWriter();
-          Result error = Result.error("登录失败");
-          if (exception instanceof LockedException) {
-            error.setErrorMsg("账户被锁定，请联系管理员!");
-          } else if (exception instanceof CredentialsExpiredException) {
-            error.setErrorMsg("密码过期，请联系管理员!");
-          } else if (exception instanceof AccountExpiredException) {
-            error.setErrorMsg("账户过期，请联系管理员!");
-          } else if (exception instanceof DisabledException) {
-            error.setErrorMsg("账户被禁用，请联系管理员!");
-          } else if (exception instanceof BadCredentialsException) {
-            error.setErrorMsg("用户名或者密码输入错误，请重新输入!");
-          }
-          out.write(new ObjectMapper().writeValueAsString(error));
-          out.flush();
-          out.close();
-        }
-      })
-      .permitAll()
+      .antMatchers(
+        HttpMethod.GET,
+        "/*.html",
+        "/**/*.html",
+        "/**/*.css",
+        "/**/*.js"
+      ).anonymous()
+
+      .antMatchers(HttpMethod.POST, "/auth/login").anonymous()
+      .antMatchers(HttpMethod.POST, "/auth/register").anonymous()
+      .antMatchers("/auth/vCode").anonymous()
+
+      // swagger start
+      .antMatchers("/swagger-ui.html").anonymous()
+      .antMatchers("/swagger-resources/**").anonymous()
+      .antMatchers("/webjars/**").anonymous()
+      .antMatchers("/*/api-docs").anonymous()
+      // swagger end
+
+      // 接口限流测试
+      .antMatchers("/test/**").anonymous()
+      .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
+
+      .antMatchers("/druid/**").anonymous()
+      // 所有请求都需要认证
+      .anyRequest().authenticated()
       .and()
       .logout()
-      .logoutUrl("/logout")
+      .logoutUrl("/auth/logout")
       .logoutSuccessHandler(new LogoutSuccessHandler() {
         @Override
         public void onLogoutSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws IOException, ServletException {
@@ -115,26 +127,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
       })
       .permitAll()
-      .and()
-      .csrf().disable().exceptionHandling()
-      //没有认证时，在这里处理结果，不要重定向
-      .authenticationEntryPoint(new AuthenticationEntryPoint() {
-        @Override
-        public void commence(HttpServletRequest req, HttpServletResponse resp, AuthenticationException authException) throws IOException, ServletException {
-          resp.setContentType("application/json;charset=utf-8");
-          resp.setStatus(401);
-          PrintWriter out = resp.getWriter();
-          Result error = Result.error("访问失败!");
-          if (authException instanceof InsufficientAuthenticationException) {
-            error.setErrorMsg("身份验证失败!请重新登录");
-          }
-          out.write(new ObjectMapper().writeValueAsString(error));
-          out.flush();
-          out.close();
-        }
-      })
+      // 防止iframe 造成跨域
+      .and().headers().frameOptions().disable();
 
-    ;
+    http
+      .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
   }
 
 }

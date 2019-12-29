@@ -1,8 +1,11 @@
 package com.noobz.iwant.entity;
 
-public class User extends UserKey {
+public class User {
+    private Integer accountId;
 
     private String realname;
+
+    private String idno;
 
     private String volunteerNo;
 
@@ -24,9 +27,20 @@ public class User extends UserKey {
 
     private String address;
 
-    public User(String accountId, String idno, String realname, String volunteerNo, String city, String workPlace, String job, String jobLevel, String education, String special, String email, String mobile, String address) {
-        super(accountId, idno);
+    private String skill;
+
+    private String improve;
+
+    private String avatar;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public User(Integer accountId, String realname, String idno, String volunteerNo, String city, String workPlace, String job, String jobLevel, String education, String special, String email, String mobile, String address, String skill, String improve) {
+        this.accountId = accountId;
         this.realname = realname;
+        this.idno = idno;
         this.volunteerNo = volunteerNo;
         this.city = city;
         this.workPlace = workPlace;
@@ -37,10 +51,20 @@ public class User extends UserKey {
         this.email = email;
         this.mobile = mobile;
         this.address = address;
+        this.skill = skill;
+        this.improve = improve;
     }
 
     public User() {
         super();
+    }
+
+    public Integer getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
     }
 
     public String getRealname() {
@@ -49,6 +73,14 @@ public class User extends UserKey {
 
     public void setRealname(String realname) {
         this.realname = realname == null ? null : realname.trim();
+    }
+
+    public String getIdno() {
+        return idno;
+    }
+
+    public void setIdno(String idno) {
+        this.idno = idno == null ? null : idno.trim();
     }
 
     public String getVolunteerNo() {
@@ -129,5 +161,21 @@ public class User extends UserKey {
 
     public void setAddress(String address) {
         this.address = address == null ? null : address.trim();
+    }
+
+    public String getSkill() {
+        return skill;
+    }
+
+    public void setSkill(String skill) {
+        this.skill = skill == null ? null : skill.trim();
+    }
+
+    public String getImprove() {
+        return improve;
+    }
+
+    public void setImprove(String improve) {
+        this.improve = improve == null ? null : improve.trim();
     }
 }

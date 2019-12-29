@@ -3,9 +3,9 @@
 <mapper namespace="com.noobz.iwant.mapper.UserMapper" >
   <resultMap id="BaseResultMap" type="com.noobz.iwant.entity.User" >
     <constructor >
-      <idArg column="account_id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <idArg column="idno" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <idArg column="account_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="realname" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="idno" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="volunteer_no" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="city" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="work_place" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -16,73 +16,50 @@
       <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="mobile" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="address" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="skill" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="improve" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.noobz.iwant.entity.UserWithBLOBs" >
-    <constructor >
-      <idArg column="account_id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <idArg column="idno" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="realname" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="volunteer_no" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="city" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="work_place" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="job" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="job_level" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="education" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="special" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="mobile" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="address" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="skill" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
-      <arg column="improve" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
-    </constructor>
-  </resultMap>
+
   <sql id="Base_Column_List" >
-    account_id, idno, realname, volunteer_no, city, work_place, job, job_level, education, 
-    special, email, mobile, address
+    account_id, realname, idno, volunteer_no, city, work_place, job, job_level, education,
+    special, email, mobile, address, skill, improve
   </sql>
-  <sql id="Blob_Column_List" >
-    skill, improve
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.noobz.iwant.entity.UserKey" >
-    select 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from user
-    where account_id = #{accountId,jdbcType=VARCHAR}
-      and idno = #{idno,jdbcType=VARCHAR}
+    where account_id = #{accountId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.noobz.iwant.entity.UserKey" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from user
-    where account_id = #{accountId,jdbcType=VARCHAR}
-      and idno = #{idno,jdbcType=VARCHAR}
+    where account_id = #{accountId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.noobz.iwant.entity.UserWithBLOBs" >
-    insert into user (account_id, idno, realname, 
-      volunteer_no, city, work_place, 
-      job, job_level, education, 
-      special, email, mobile, 
+  <insert id="insert" parameterType="com.noobz.iwant.entity.User" >
+    insert into user (account_id, realname, idno,
+      volunteer_no, city, work_place,
+      job, job_level, education,
+      special, email, mobile,
       address, skill, improve
       )
-    values (#{accountId,jdbcType=VARCHAR}, #{idno,jdbcType=VARCHAR}, #{realname,jdbcType=VARCHAR}, 
-      #{volunteerNo,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{workPlace,jdbcType=VARCHAR}, 
-      #{job,jdbcType=VARCHAR}, #{jobLevel,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, 
-      #{special,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{skill,jdbcType=LONGVARCHAR}, #{improve,jdbcType=LONGVARCHAR}
+    values (#{accountId,jdbcType=INTEGER}, #{realname,jdbcType=VARCHAR}, #{idno,jdbcType=VARCHAR},
+      #{volunteerNo,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{workPlace,jdbcType=VARCHAR},
+      #{job,jdbcType=VARCHAR}, #{jobLevel,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR},
+      #{special,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR}, #{skill,jdbcType=VARCHAR}, #{improve,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.noobz.iwant.entity.UserWithBLOBs" >
+  <insert id="insertSelective" parameterType="com.noobz.iwant.entity.User" >
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="accountId != null" >
         account_id,
       </if>
-      <if test="idno != null" >
-        idno,
-      </if>
       <if test="realname != null" >
         realname,
+      </if>
+      <if test="idno != null" >
+        idno,
       </if>
       <if test="volunteerNo != null" >
         volunteer_no,
@@ -123,13 +100,13 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="accountId != null" >
-        #{accountId,jdbcType=VARCHAR},
-      </if>
-      <if test="idno != null" >
-        #{idno,jdbcType=VARCHAR},
+        #{accountId,jdbcType=INTEGER},
       </if>
       <if test="realname != null" >
         #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="idno != null" >
+        #{idno,jdbcType=VARCHAR},
       </if>
       <if test="volunteerNo != null" >
         #{volunteerNo,jdbcType=VARCHAR},
@@ -162,18 +139,21 @@
         #{address,jdbcType=VARCHAR},
       </if>
       <if test="skill != null" >
-        #{skill,jdbcType=LONGVARCHAR},
+        #{skill,jdbcType=VARCHAR},
       </if>
       <if test="improve != null" >
-        #{improve,jdbcType=LONGVARCHAR},
+        #{improve,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.noobz.iwant.entity.UserWithBLOBs" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.noobz.iwant.entity.User" >
     update user
     <set >
       <if test="realname != null" >
         realname = #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="idno != null" >
+        idno = #{idno,jdbcType=VARCHAR},
       </if>
       <if test="volunteerNo != null" >
         volunteer_no = #{volunteerNo,jdbcType=VARCHAR},
@@ -206,18 +186,18 @@
         address = #{address,jdbcType=VARCHAR},
       </if>
       <if test="skill != null" >
-        skill = #{skill,jdbcType=LONGVARCHAR},
+        skill = #{skill,jdbcType=VARCHAR},
       </if>
       <if test="improve != null" >
-        improve = #{improve,jdbcType=LONGVARCHAR},
+        improve = #{improve,jdbcType=VARCHAR},
       </if>
     </set>
-    where account_id = #{accountId,jdbcType=VARCHAR}
-      and idno = #{idno,jdbcType=VARCHAR}
+    where account_id = #{accountId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.noobz.iwant.entity.UserWithBLOBs" >
+  <update id="updateByPrimaryKey" parameterType="com.noobz.iwant.entity.User" >
     update user
     set realname = #{realname,jdbcType=VARCHAR},
+      idno = #{idno,jdbcType=VARCHAR},
       volunteer_no = #{volunteerNo,jdbcType=VARCHAR},
       city = #{city,jdbcType=VARCHAR},
       work_place = #{workPlace,jdbcType=VARCHAR},
@@ -228,25 +208,35 @@
       email = #{email,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
-      skill = #{skill,jdbcType=LONGVARCHAR},
-      improve = #{improve,jdbcType=LONGVARCHAR}
-    where account_id = #{accountId,jdbcType=VARCHAR}
-      and idno = #{idno,jdbcType=VARCHAR}
+      skill = #{skill,jdbcType=VARCHAR},
+      improve = #{improve,jdbcType=VARCHAR}
+    where account_id = #{accountId,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.noobz.iwant.entity.User" >
-    update user
-    set realname = #{realname,jdbcType=VARCHAR},
-      volunteer_no = #{volunteerNo,jdbcType=VARCHAR},
-      city = #{city,jdbcType=VARCHAR},
-      work_place = #{workPlace,jdbcType=VARCHAR},
-      job = #{job,jdbcType=VARCHAR},
-      job_level = #{jobLevel,jdbcType=VARCHAR},
-      education = #{education,jdbcType=VARCHAR},
-      special = #{special,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      mobile = #{mobile,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR}
+  <select id="selectByIdno" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where idno = #{idno,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByMobile" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where mobile = #{idno,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByAccountId" parameterType="java.lang.Integer" >
+    delete from user
     where account_id = #{accountId,jdbcType=VARCHAR}
-      and idno = #{idno,jdbcType=VARCHAR}
-  </update>
+  </delete>
+
+  <select id="getUserByAccountId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />,
+        avatar
+    from user a, account b
+    where a.account_id = b.id
+      and account_id = #{accountId,jdbcType=INTEGER}
+  </select>
 </mapper>
