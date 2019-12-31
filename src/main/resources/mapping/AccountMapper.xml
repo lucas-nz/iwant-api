@@ -38,7 +38,7 @@
                improve, avatar
           from account a, user b
          where a.id =  b.account_id
-           and a.id = #{accountId,jdbcType=INTEGER}
+           and id = #{accountId,jdbcType=INTEGER}
     </select>
 
     <select id="getAccountByUsername" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
@@ -46,7 +46,10 @@
         <include refid="Base_Column_List"/>
         ,
         <include refid="Blob_Column_List"/>
-        from account
+        ,
+        b.mobile, avatar avatarUrl
+        from account a
+        left join user b on a.id = b.account_id
         where username = #{username,jdbcType=VARCHAR}
     </select>
 

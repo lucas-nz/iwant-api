@@ -31,6 +31,26 @@ public class Account implements UserDetails {
 
   private byte[] avatar;
 
+  private String mobile;
+
+  public String getMobile() {
+    return mobile;
+  }
+
+  public void setMobile(String mobile) {
+    this.mobile = mobile;
+  }
+
+  private String avatarUrl;
+
+  public String getAvatarUrl() {
+    return avatarUrl;
+  }
+
+  public void setAvatarUrl(String avatarUrl) {
+    this.avatarUrl = avatarUrl;
+  }
+
   public void setAvatar(byte[] avatar) {
     this.avatar = avatar;
   }

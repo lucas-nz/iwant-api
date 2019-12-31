@@ -97,8 +97,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
       .antMatchers(HttpMethod.POST, "/auth/login").anonymous()
       .antMatchers(HttpMethod.POST, "/auth/register").anonymous()
-      .antMatchers("/auth/vCode").anonymous()
-
+      .antMatchers( "/auth/vCode").anonymous()
+      .antMatchers(HttpMethod.GET, "/meeting/**").permitAll()
       // swagger start
       .antMatchers("/swagger-ui.html").anonymous()
       .antMatchers("/swagger-resources/**").anonymous()

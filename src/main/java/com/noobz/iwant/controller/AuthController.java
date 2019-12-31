@@ -12,6 +12,7 @@ import com.noobz.iwant.utils.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -66,9 +67,8 @@ public class AuthController {
 
   @GetMapping("/info")
   public Result getUserInfo() {
-    Account account = SecurityUtil.getCurrentUser();
-    Integer id = account.getId();
-    return Result.success(accountService.getUserByAccountId(id));
+    Account account = (Account) accountService.loadUserByUsername(SecurityUtil.getUsername());
+    return Result.success(account);
   }
 
 
