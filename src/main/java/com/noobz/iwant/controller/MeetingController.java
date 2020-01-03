@@ -21,6 +21,13 @@ public class MeetingController {
   @Autowired
   MeetingService meetingService;
 
+  @GetMapping("/{meetingId}")
+  public Result getMeetingInfo(@PathVariable Integer meetingId) {
+    return Result.success(meetingService.getMeetingInfo(meetingId));
+  }
+
+
+
   //获取最新会议
   @GetMapping("/latest")
   public Result getLatest() {

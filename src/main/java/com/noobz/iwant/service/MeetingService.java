@@ -38,4 +38,7 @@ public class MeetingService {
   }
 
 
+  public Meeting getMeetingInfo(Integer meetingId) {
+    return meetingMapper.selectByPrimaryKey(meetingId);
+  }
 }
